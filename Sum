@@ -1,6 +1,4 @@
 Sum :
-time limit per test1 second
-memory limit per test256 megabytes
 You are given three integers a , b , and c. 
 Determine if one of them is the sum of the other two.
 
