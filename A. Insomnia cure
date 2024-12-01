@@ -35,3 +35,26 @@ In the first case every first dragon got punched with a frying pan. Some of the 
 
 In the second case dragons 1, 7, 11, 13, 17, 19 and 23 escaped unharmed.
 
+code :
+import java.util.Scanner;
+
+public class InsomniaCure {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int k = scanner.nextInt();
+        int l = scanner.nextInt();
+        int m = scanner.nextInt();
+        int n = scanner.nextInt();
+        int d = scanner.nextInt();
+        int count = 0;
+
+        for (int i = 1; i <= d; i++) {
+            if (i % k == 0 || i % l == 0 || i % m == 0 || i % n == 0) {
+                count++;
+            }
+        }
+
+        System.out.println(count);
+    }
+}
+
