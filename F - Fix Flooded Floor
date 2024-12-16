@@ -1,0 +1,53 @@
+import java.util.*;
+
+public class FixFloodedFloor {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int T = scanner.nextInt();
+        StringBuilder result = new StringBuilder();
+
+        for (int t = 0; t < T; t++) {
+            int n = scanner.nextInt();
+            String row1 = scanner.next();
+            String row2 = scanner.next();
+
+            boolean possible = true;
+            int segments = 0;
+            int i = 0;
+
+            while (i < n) {
+                if (row1.charAt(i) == '.' || row2.charAt(i) == '.') {
+                    segments++;
+                    boolean horizontal = true;
+
+                    if (i + 1 < n && row1.charAt(i + 1) == '.' && row2.charAt(i + 1) == '.') {
+                        horizontal = false;
+                        i += 2;
+                    } else {
+                        if (row1.charAt(i) == '.' && row2.charAt(i) == '.') {
+                            horizontal = false;
+                        }
+                        i++;
+                    }
+
+                    if (!horizontal && (i < n && (row1.charAt(i) == '.' || row2.charAt(i) == '.'))) {
+                        possible = false;
+                        break;
+                    }
+                } else {
+                    i++;
+                }
+            }
+
+            if (!possible) {
+                result.append("None\n");
+            } else if (segments == 1) {
+                result.append("Unique\n");
+            } else {
+                result.append("Multiple\n");
+            }
+        }
+
+        System.out.print(result);
+    }
+}
