@@ -1,0 +1,379 @@
+Volcanic Eruption
+There are 
+N
+N positions along a line, each of which contains either a building (with positive height) or a volcano.
+You are given this information as an array 
+A
+A of length 
+N
+N, where 
+A
+i
+=
+0
+A 
+i
+​
+ =0 represents a volcano at position 
+i
+i, and 
+A
+i
+>
+0
+A 
+i
+​
+ >0 represents a building with height 
+A
+i
+A 
+i
+​
+  at position 
+i
+i.
+
+Initially, the lava level is 
+0
+0. Every second, all the volcanoes erupt simultaneously, increasing each of their lava levels by exactly 
+P
+P.
+Lava behaves as follows:
+
+Suppose the current lava level is 
+X
+X. Then, lava will flow left and and right from each volcano till it reaches a building whose height is strictly greater than 
+X
+X, at which point it will stop flowing.
+For each 
+i
+i, determine the minimum time at which building 
+i
+i is completely submerged under lava.
+
+Input Format
+The first line of input will contain a single integer 
+T
+T, denoting the number of test cases.
+Each test case consists of two lines of input.
+The first line contains two space-separated integers 
+N
+N and 
+P
+P — the number of buildings and the rate at which lava level increases, respectively.
+The second line contains 
+N
+N space-separated integers 
+A
+1
+,
+A
+2
+,
+…
+,
+A
+N
+A 
+1
+​
+ ,A 
+2
+​
+ ,…,A 
+N
+​
+ , describing information about the buildings and volcanoes as detailed in the statement.
+Output Format
+For each test case, output 
+N
+N space-separated integers, say 
+t
+1
+,
+t
+2
+,
+…
+,
+t
+N
+t 
+1
+​
+ ,t 
+2
+​
+ ,…,t 
+N
+​
+ .
+If 
+A
+i
+=
+0
+A 
+i
+​
+ =0, then 
+t
+i
+t 
+i
+​
+  should also be 
+0
+0.
+If 
+A
+i
+>
+0
+A 
+i
+​
+ >0, 
+t
+i
+t 
+i
+​
+  should be the minimum time at which building 
+i
+i is completely covered by lava.
+Constraints
+1
+≤
+T
+≤
+1
+0
+5
+1≤T≤10 
+5
+ 
+1
+≤
+N
+≤
+3
+×
+1
+0
+5
+1≤N≤3×10 
+5
+ 
+1
+≤
+P
+≤
+1
+0
+9
+1≤P≤10 
+9
+ 
+0
+≤
+A
+i
+≤
+1
+0
+9
+0≤A 
+i
+​
+ ≤10 
+9
+ 
+The sum of 
+N
+N across all test cases will not exceed 
+3
+×
+1
+0
+5
+3×10 
+5
+ .
+There exists at least one index 
+i
+i such that 
+A
+i
+=
+0
+A 
+i
+​
+ =0.
+Sample 1:
+Input
+Output
+2
+6 2
+4 0 6 2 8 0
+6 3
+4 0 6 2 8 0
+2 0 3 3 4 0 
+2 0 2 2 3 0 
+Explanation:
+Test case 
+1
+1: The lava behaves as follows:
+
+In the first second, the lava level increases by 
+P
+=
+2
+P=2 and becomes 
+2
+2. No buildings are submerged.
+In the next second, the lava level increases by 
+P
+=
+2
+P=2 and becomes 
+4
+4. The first building is now submerged since the lava from the volcano at index 
+2
+2 will flow over it.
+In the third second, the lava level increases by 
+2
+2 again, and becomes 
+6
+6. The lava from the volcano at 
+2
+2 moves right till it reaches index 
+5
+5; submerging buildings 
+3
+3 and 
+4
+4.
+In the fourth second, the lava level becomes 
+8
+8, and the final remaining building is submerged.
+So, we obtain 
+t
+1
+=
+2
+t 
+1
+​
+ =2, 
+t
+3
+=
+t
+4
+=
+3
+t 
+3
+​
+ =t 
+4
+​
+ =3, and 
+t
+5
+=
+4
+t 
+5
+​
+ =4.
+import java.util.*;
+import java.lang.*;
+import java.io.*;
+
+
+class Codechef {
+    
+    // Function to compute ceiling of a / b
+    static long ceilDiv(long a, long b) {
+        return (a + b - 1) / b;
+    }
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        PrintWriter out = new PrintWriter(System.out);
+        
+        int t = Integer.parseInt(br.readLine().trim());
+        
+        while (t-- > 0) {
+            String[] input = br.readLine().trim().split(" ");
+            int N = Integer.parseInt(input[0]);
+            long P = Long.parseLong(input[1]);
+
+            long[] A = new long[N];
+            String[] arr = br.readLine().trim().split(" ");
+            for (int i = 0; i < N; i++) {
+                A[i] = Long.parseLong(arr[i]);
+            }
+
+            final long infi = (long) 1e18;
+            long[] ti = new long[N];
+            Arrays.fill(ti, infi);
+
+            // Priority queue: (t_i, index), using a MinHeap
+            PriorityQueue<long[]> pq = new PriorityQueue<>(Comparator.comparingLong(o -> o[0]));
+
+            // Initialize volcanoes
+            for (int i = 0; i < N; i++) {
+                if (A[i] == 0) {
+                    ti[i] = 0;
+                    pq.offer(new long[]{0, i});
+                }
+            }
+
+            // Directions: left (-1) and right (+1)
+            int[] directions = {-1, 1};
+
+            while (!pq.isEmpty()) {
+                long[] current = pq.poll();
+                long currentT = current[0];
+                int u = (int) current[1];
+
+                // If we have already found a better time, skip
+                if (currentT > ti[u]) continue;
+
+                for (int dir : directions) {
+                    int v = u + dir;
+                    if (v < 0 || v >= N) continue;
+
+                    // Compute required t for v
+                    long requiredT;
+                    if (A[v] == 0) {
+                        requiredT = 0;
+                    } else {
+                        requiredT = ceilDiv(A[v], P);
+                    }
+
+                    // The earliest time to reach v is max(current_t, required_t)
+                    long newS = Math.max(currentT, requiredT);
+
+                    if (newS < ti[v]) {
+                        ti[v] = newS;
+                        pq.offer(new long[]{newS, v});
+                    }
+                }
+            }
+
+            // Output results
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < N; i++) {
+                sb.append(A[i] == 0 ? "0 " : ti[i] + " ");
+            }
+            out.println(sb.toString().trim());
+        }
+        out.flush();
+    }
+}
