@@ -1,0 +1,23 @@
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int t = sc.nextInt();
+
+        while (t-- > 0) {
+            int n = sc.nextInt();
+            int k = 2;
+
+            while (true) {
+                int sum = (1 << k) - 1; // 2^k - 1
+
+                if (n % sum == 0) {
+                    System.out.println(n / sum);
+                    break;
+                }
+                k++;
+            }
+        }
+    }
+}
