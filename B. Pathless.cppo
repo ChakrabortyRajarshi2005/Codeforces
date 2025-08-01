@@ -1,0 +1,127 @@
+B. Pathless
+time limit per test1 second
+memory limit per test256 megabytes
+There is an array a1,a2,…,an
+ consisting of values 0
+, 1
+, and 2
+, and an integer s
+. It is guaranteed that a1,a2,…,an
+ contains at least one 0
+, one 1
+, and one 2
+.
+
+Alice wants to start from index 1
+ and perform steps of length 1
+ to the right or to the left, and reach index n
+ at the end. While Alice moves, she calculates the sum of the values she is visiting, and she wants the sum to be exactly s
+.
+
+Formally, Alice wants to find a sequence [i1,i2,…,im]
+ of indices, such that:
+
+i1=1
+, im=n
+.
+1≤ij≤n
+ for all 1≤j≤m
+.
+|ij−ij+1|=1
+ for all 1≤j<m
+.
+ai1+ai2+…+aim=s
+.
+However, Bob wants to rearrange a1,a2,…,an
+ to prevent Alice from achieving her target. Determine whether it is possible to rearrange a1,a2,…,an
+ such that Alice cannot find her target sequence (even if Alice is smart enough). If it is possible, you also need to output the rearranged array a1,a2,…,an
+.
+
+Input
+Each test contains multiple test cases. The first line contains the number of test cases t
+ (1≤t≤103
+). The description of the test cases follows.
+
+The first line of each test case contains two integers n
+ and s
+ (3≤n≤50
+, 0≤s≤1000
+).
+
+The second line of each test case contains n
+ integers a1,a2,…,an
+ (0≤ai≤2
+).
+
+It is guaranteed that a
+ contains at least one 0
+, one 1
+, and one 2
+.
+
+Output
+For each test case, if it is possible to rearrange a
+ such that Alice cannot find her target sequence, output n
+ integers — such rearrangement of a
+. Otherwise, output −1
+ instead.
+
+Example
+InputCopy
+6
+3 2
+0 1 2
+3 3
+0 1 2
+3 6
+0 1 2
+3 4
+0 1 2
+3 10
+0 1 2
+5 1000
+2 0 1 1 2
+OutputCopy
+0 1 2
+-1
+-1
+0 2 1 
+-1
+-1
+Note
+In the first test case, any rearrangement of a
+ can prevent Alice from achieving her target.
+
+In the second test case, regardless of rearranging a
+, Alice can always find the sequence [1,2,3]
+ as her target sequence.
+
+In the third test case,there is no rearrangement of a
+ that can prevent Alice from achieving her target. For example, for a=[0,2,1]
+, Alice can find the sequence [1,2,3,2,3]
+ as her target sequence.
+
+
+
+#include <bits/stdc++.h>
+using namespace std;
+
+void solve(){
+    int n, k, tmp;
+    cin >> n >> k;
+    vector<int> a(3);
+    for(int i=0; i<n; i++){cin >> tmp; a[tmp]++;}
+    if(k == a[1] + 2*a[2] || k >= a[1] + 2*a[2] + 2){cout << -1 << '\n'; return;}
+    for(int i=0; i<a[0]; i++) cout << 0 << ' ';
+    for(int i=0; i<a[2]; i++) cout << 2 << ' ';
+    for(int i=0; i<a[1]; i++) cout << 1 << ' ';
+    cout << '\n';
+}
+
+int main(){
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    int t;
+    cin >> t;
+    while(t--) solve();
+}
